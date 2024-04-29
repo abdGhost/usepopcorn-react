@@ -3,6 +3,8 @@ import StarRating from "./StarRating";
 import { useMovies } from "./useMovies";
 import { useLocalStorageState } from "./useLocalStorgaeState";
 
+import { useKey } from "./useKey";
+
 // const tempMovieData = [
 //   {
 //     imdbID: "tt1375666",
@@ -133,22 +135,27 @@ function Navbar({ children }) {
 function Search({ query, setQuery }) {
   const inputEl = useRef(null);
 
-  useEffect(
-    function () {
-      function callBack(e) {
-        if (document.activeElement === inputEl.current) return;
+  useKey("Enter", function () {
+    if (document.activeElement === inputEl.current) return;
+    inputEl.current.focus();
+    setQuery("");
+  });
 
-        if (e.code === "ENTER") {
-          inputEl.current.focus();
-          setQuery("");
-        }
-      }
+  // useEffect(
+  //   function () {
+  //     function callBack(e) {
+  //       if (e.code === "ENTER") {
+  //         if (document.activeElement === inputEl.current) return;
+  //         inputEl.current.focus();
+  //         setQuery("");
+  //       }
+  //     }
 
-      document.addEventListener("keydown", callBack);
-      return () => document.addEventListener("keydown", callBack);
-    },
-    [setQuery]
-  );
+  //     document.addEventListener("keydown", callBack);
+  //     return () => document.addEventListener("keydown", callBack);
+  //   },
+  //   [setQuery]
+  // );
 
   return (
     <input
@@ -298,22 +305,24 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
     // setAvgRating((avgRating) => (avgRating + userRating) / 2);
   }
 
-  useEffect(
-    function () {
-      function callBack(e) {
-        if (e.code === "Escape") {
-          onCloseMovie();
-        }
-      }
+  useKey("Escape", onCloseMovie);
 
-      document.addEventListener("keydown", callBack);
+  // useEffect(
+  //   function () {
+  //     function callBack(e) {
+  //       if (e.code === "Escape") {
+  //         onCloseMovie();
+  //       }
+  //     }
 
-      return function () {
-        document.removeEventListener("keydown", callBack);
-      };
-    },
-    [onCloseMovie]
-  );
+  //     document.addEventListener("keydown", callBack);
+
+  //     return function () {
+  //       document.removeEventListener("keydown", callBack);
+  //     };
+  //   },
+  //   [onCloseMovie]
+  // );
 
   useEffect(
     function () {
